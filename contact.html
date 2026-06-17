@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="联系道丹元 - 地址、电话、邮箱、在线留言、官方账号">
+  <title>联系我们 - 道丹元</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <!-- @partial site-top.html -->
+
+<section class="page-banner" id="main-content">
+    <div class="container">
+      <h1 class="page-banner__title">联系我们</h1>
+      <p class="page-banner__desc">我们期待听到您的声音，随时为您提供帮助</p>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info fade-in" id="contact-info-panel">
+          <h2 class="content-block__title" id="contact-info-title">联系方式</h2>
+
+          <div class="contact-info__item" data-site-block="contact.hotline">
+            <div class="contact-info__icon">📞</div>
+            <div>
+              <div class="contact-info__label">全国服务专线</div>
+              <div class="contact-info__value" data-site="contact.hotline">400-888-0929</div>
+            </div>
+          </div>
+
+          <div class="contact-info__item" data-site-block="contact.businessHotline">
+            <div class="contact-info__icon">🤝</div>
+            <div>
+              <div class="contact-info__label">商务合作专线</div>
+              <div class="contact-info__value" data-site="contact.businessHotline">400-888-0930</div>
+            </div>
+          </div>
+
+          <div class="contact-info__item" data-site-block="contact.servicePhone">
+            <div class="contact-info__icon">📱</div>
+            <div>
+              <div class="contact-info__label">客户服务</div>
+              <div class="contact-info__value" data-site="contact.servicePhone">0755-8888-0929</div>
+            </div>
+          </div>
+
+          <div class="contact-info__item" data-site-block="contact.businessEmail">
+            <div class="contact-info__icon">✉️</div>
+            <div>
+              <div class="contact-info__label">商务邮箱</div>
+              <div class="contact-info__value" data-site="contact.businessEmail">business@daodanyuan.com</div>
+            </div>
+          </div>
+
+          <div class="contact-info__item" data-site-block="contact.serviceEmail">
+            <div class="contact-info__icon">📧</div>
+            <div>
+              <div class="contact-info__label">客服邮箱</div>
+              <div class="contact-info__value" data-site="contact.serviceEmail">service@daodanyuan.com</div>
+            </div>
+          </div>
+
+          <div class="contact-info__item" data-site-block="contact.address">
+            <div class="contact-info__icon">📍</div>
+            <div>
+              <div class="contact-info__label">公司地址</div>
+              <div class="contact-info__value" data-site="contact.address">深圳市南山区科技园南区科苑路15号</div>
+            </div>
+          </div>
+
+          <div class="contact-info__item" data-site-block="contact.workHours">
+            <div class="contact-info__icon">🕐</div>
+            <div>
+              <div class="contact-info__label">工作时间</div>
+              <div class="contact-info__value" data-site="contact.workHours">周一至周五 9:00 - 18:00</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fade-in">
+          <h2 class="content-block__title">在线留言</h2>
+          <p class="content-block__text mb-md">填写以下表单，我们会尽快与您联系。</p>
+          <form id="contact-form">
+            <div class="form-group">
+              <label for="name">姓名 *</label>
+              <input type="text" id="name" name="name" required placeholder="请输入您的姓名">
+            </div>
+            <div class="form-group">
+              <label for="phone">联系电话 *</label>
+              <input type="tel" id="phone" name="phone" required placeholder="请输入您的联系电话">
+            </div>
+            <div class="form-group">
+              <label for="email">电子邮箱</label>
+              <input type="email" id="email" name="email" placeholder="请输入您的邮箱">
+            </div>
+            <div class="form-group">
+              <label for="type">咨询类型</label>
+              <select id="type" name="type">
+                <option value="product">产品咨询</option>
+                <option value="business">商务合作</option>
+                <option value="dealer">经销商加盟</option>
+                <option value="group">企业团购</option>
+                <option value="restaurant">餐饮合作</option>
+                <option value="media">媒体采访</option>
+                <option value="other">其他</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">留言内容 *</label>
+              <textarea id="message" name="message" required placeholder="请描述您的需求或问题"></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary">提交留言</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 位置地图 -->
+  <section class="content-section content-section--alt" id="contact-map-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2 class="section-header__title">欢迎来访</h2>
+        <p class="section-header__desc" data-site-block="contact.mapCaption" data-site="contact.mapCaption">深圳市南山区科技园南区科苑路15号 · 道丹元总部</p>
+      </div>
+      <div class="map-placeholder fade-in" data-site-block="contact.address">
+        <img src="/images/brand/factory-2.jpg" alt="道丹元总部位置示意">
+        <div class="map-placeholder__overlay">
+          <p><strong data-site="contact.address">深圳市南山区科技园南区科苑路15号</strong></p>
+          <p class="map-placeholder__caption" data-site-block="contact.mapCaption" data-site="contact.mapCaption">深圳市南山区科技园南区科苑路15号</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 官方账号 -->
+  <section class="content-section" id="contact-social-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2 class="section-header__title">官方新媒体账号</h2>
+      </div>
+      <div class="social-grid fade-in" id="contact-social-grid"></div>
+    </div>
+  </section>
+
+    <!-- @partial footer.html -->
+
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>

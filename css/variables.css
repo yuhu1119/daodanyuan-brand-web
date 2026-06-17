@@ -1,0 +1,67 @@
+:root {
+  /* 品牌色 - 草本绿 + 暖色点缀 */
+  --color-primary: #1b4332;
+  --color-primary-dark: #081c15;
+  --color-primary-light: #2d6a4f;
+  --color-accent: #bc4749;
+  --color-accent-light: #d4a574;
+  --color-accent-soft: #e8dcc8;
+
+  /* 中性色 - 暖白底 */
+  --color-white: #ffffff;
+  --color-cream: #fffbf5;
+  --color-bg: #f8f4ee;
+  --color-bg-dark: #0a0a0a;
+  --color-text: #1a1a1a;
+  --color-text-muted: #5c5c5c;
+  --color-text-light: #999999;
+  --color-border: #ebe4d8;
+
+  /* 字体 */
+  --font-sans: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --font-serif: var(--font-sans);
+
+  /* 字号与行高（全站正文统一） */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.0625rem;
+  --leading-tight: 1.45;
+  --leading-body: 1.8;
+  --leading-relaxed: 1.85;
+
+  /* 间距 - 流体 */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: clamp(1.25rem, 3vw, 2rem);
+  --spacing-lg: clamp(2rem, 5vw, 4rem);
+  --spacing-xl: clamp(3rem, 7vw, 6rem);
+  --spacing-2xl: clamp(4rem, 9vw, 8rem);
+
+  /* 布局 */
+  --container-max: 1280px;
+  --container-pad: clamp(1rem, 4vw, 2rem);
+  --header-height: 64px;
+  --site-top-offset: var(--header-height);
+  --nav-drawer-width: min(320px, 88vw);
+
+  /* 圆角 */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* 过渡 */
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 阴影 */
+  --shadow-sm: 0 2px 12px rgba(27, 67, 50, 0.06);
+  --shadow-md: 0 8px 32px rgba(27, 67, 50, 0.1);
+  --shadow-lg: 0 20px 48px rgba(27, 67, 50, 0.12);
+
+  /* 响应式断点（供 JS / 注释参考） */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 992px;
+  --bp-xl: 1200px;
+}

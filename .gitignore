@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.DS_Store
+*.local
+.env
+data/admin.json
+data/users.json
+data/audit-log.json
+data/messages.json
+data/stats.json
+data/publish-state.json
+data/backups/
+public/images/uploads/*
+!public/images/uploads/.gitkeep

@@ -1,0 +1,33 @@
+{
+  "name": "daodanyuan-brand-web",
+  "version": "1.0.0",
+  "description": "道丹元企业官网",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "dev:all": "node scripts/dev.mjs",
+    "build": "node scripts/sync-news.mjs && node scripts/sync-banner.mjs && node scripts/sync-settings.mjs && node scripts/generate-sitemap.mjs && vite build",
+    "preview": "vite preview",
+    "seed": "node scripts/seed-data.mjs",
+    "sync:news": "node scripts/sync-news.mjs",
+    "admin": "node admin/server.js",
+    "admin:reset": "node scripts/reset-admin.mjs",
+    "start": "NODE_ENV=production node admin/server.js",
+    "postinstall": "node scripts/seed-data.mjs 2>/dev/null || true"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.1"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}

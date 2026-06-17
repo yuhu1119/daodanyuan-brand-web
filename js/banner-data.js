@@ -1,0 +1,68 @@
+/**
+ * 首页 Banner 数据（由后台自动生成，请勿手动编辑）
+ * 编辑请登录管理后台：/admin
+ */
+
+/** @type {import('./banner-data.js').BannerSlide[]} */
+export const BANNER_SLIDES = [
+  {
+    "id": "slide-1",
+    "enabled": true,
+    "image": "/images/brand/hero-1.jpg",
+    "tag": "东方草本 · 商务伴饮",
+    "title": "九解丹",
+    "subtitle": "道丹元旗下核心产品，以千年本草智慧融现代纳米包埋工艺，为商务宴请与日常养护提供一杯体面、自然的草本选择。",
+    "buttons": [
+      {
+        "text": "合作咨询",
+        "url": "business.html",
+        "style": "accent"
+      },
+      {
+        "text": "探索产品",
+        "url": "products.html",
+        "style": "outline-light"
+      }
+    ]
+  },
+  {
+    "id": "slide-2",
+    "enabled": true,
+    "image": "/images/brand/hero-2.jpg",
+    "tag": "礼遇之选",
+    "title": "宴请赠礼 · 体面之选",
+    "subtitle": "礼遇版与臻选版礼盒，以东方美学包装传递健康关怀，成为商务往来中的独特记忆点。",
+    "buttons": [
+      {
+        "text": "合作咨询",
+        "url": "business.html",
+        "style": "accent"
+      },
+      {
+        "text": "查看礼盒",
+        "url": "products.html#luxury",
+        "style": "outline-light"
+      }
+    ]
+  },
+  {
+    "id": "slide-3",
+    "enabled": true,
+    "image": "/images/brand/hero-3.jpg",
+    "tag": "创新技术",
+    "title": "纳米包埋 · 真溶解",
+    "subtitle": "突破脂溶性成分吸收壁垒，让枳椇子与姜黄活性成分真正被身体接纳。",
+    "buttons": [
+      {
+        "text": "了解技术",
+        "url": "technology.html",
+        "style": "accent"
+      },
+      {
+        "text": "关于我们",
+        "url": "about.html",
+        "style": "outline-light"
+      }
+    ]
+  }
+];

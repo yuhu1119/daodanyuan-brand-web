@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>道丹元 · 内容管理后台</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <div id="app">
+    <!-- 登录 -->
+    <div id="login-view" class="login-view hidden">
+      <form id="login-form" class="login-card">
+        <h1 class="login-card__title">道丹元 CMS</h1>
+        <p class="login-card__desc">内容管理后台</p>
+        <label class="field">
+          <span>用户名</span>
+          <input type="text" name="username" autocomplete="username" required>
+        </label>
+        <label class="field">
+          <span>密码</span>
+          <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+        <p id="login-error" class="form-error" role="alert"></p>
+        <button type="submit" class="btn btn--primary btn--block">登录</button>
+      </form>
+    </div>
+
+    <!-- 主界面 -->
+    <div id="dashboard-view" class="dashboard hidden">
+      <header class="topbar">
+        <div class="topbar__brand">道丹元 CMS</div>
+        <div class="topbar__actions">
+          <span id="publish-version" class="topbar__user"></span>
+          <span id="user-label" class="topbar__user"></span>
+          <div class="publish-dropdown" id="publish-dropdown">
+            <button type="button" id="btn-publish-toggle" class="btn btn--accent">发布到官网 ▾</button>
+            <div class="publish-dropdown__menu hidden" id="publish-menu" role="menu">
+              <button type="button" class="publish-dropdown__item" data-publish="news" role="menuitem">发布新闻</button>
+              <button type="button" class="publish-dropdown__item" data-publish="banner" role="menuitem">发布 Banner</button>
+              <button type="button" class="publish-dropdown__item" data-publish="settings" role="menuitem">发布网站设置</button>
+              <hr class="publish-dropdown__sep" />
+              <button type="button" class="publish-dropdown__item" data-publish="all" role="menuitem">全部发布（仅同步）</button>
+              <button type="button" class="publish-dropdown__item" data-publish="all-build" role="menuitem">全部发布并构建静态站</button>
+              <button type="button" class="publish-dropdown__item" data-publish="build" role="menuitem">仅构建静态站 (dist)</button>
+            </div>
+          </div>
+          <button type="button" id="btn-logout" class="btn btn--outline">退出</button>
+        </div>
+      </header>
+
+      <div class="layout">
+        <aside class="sidebar">
+          <button type="button" class="sidebar__item active" data-view="banner-list">Banner 列表</button>
+          <button type="button" class="sidebar__item" data-view="list">新闻列表</button>
+          <button type="button" class="sidebar__item" data-view="messages">在线留言</button>
+          <button type="button" class="sidebar__item" data-view="settings">网站设置</button>
+          <button type="button" class="sidebar__item sidebar__item--super hidden" data-view="accounts">账号管理</button>
+          <button type="button" class="sidebar__item" data-view="logs">操作日志</button>
+        </aside>
+
+        <main class="main">
+          <div id="toast" class="toast" role="status"></div>
+
+          <!-- Banner 列表 -->
+          <section id="panel-banner-list" class="panel">
+            <div class="panel__head">
+              <h2>首页轮播 Banner</h2>
+              <button type="button" id="btn-new-banner" class="btn btn--primary">+ 新建 Banner</button>
+            </div>
+            <p class="panel__hint">已上线的 Banner 发布后会展示在首页；下线后仅保留在后台，不会出现在官网。</p>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>预览</th>
+                    <th>标题</th>
+                    <th>角标</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="banner-table-body"></tbody>
+              </table>
+            </div>
+            <div id="banner-pagination" class="list-pagination" hidden></div>
+          </section>
+
+          <!-- Banner 编辑 -->
+          <section id="panel-banner-edit" class="panel hidden">
+            <div class="panel__head">
+              <h2 id="banner-edit-title">编辑 Banner</h2>
+            </div>
+            <form id="banner-form" class="article-form">
+              <input type="hidden" id="banner-original-id">
+              <div class="form-grid">
+                <label class="field">
+                  <span>Banner ID（英文短横线，创建后不可改）</span>
+                  <input type="text" id="banner-field-id" pattern="[a-z0-9-]+" required>
+                </label>
+                <label class="field field--full">
+                  <span>背景图 URL</span>
+                  <div class="input-row">
+                    <input type="text" id="banner-field-image" placeholder="/images/brand/hero-1.jpg" required>
+                    <label class="btn btn--outline upload-btn">
+                      上传图片
+                      <input type="file" id="banner-image-upload" accept="image/*" hidden>
+                    </label>
+                  </div>
+                </label>
+                <label class="field"><span>角标文字</span><input type="text" id="banner-field-tag"></label>
+                <label class="field field--full"><span>主标题</span><input type="text" id="banner-field-title" required></label>
+                <label class="field field--full"><span>副标题</span><textarea id="banner-field-subtitle" rows="3"></textarea></label>
+              </div>
+              <div class="blocks-section">
+                <div class="blocks-section__head">
+                  <h3>按钮（最多 2 个，留空则不显示）</h3>
+                </div>
+                <div id="banner-buttons-container"></div>
+              </div>
+              <p id="banner-form-error" class="form-error"></p>
+              <div class="form-actions">
+                <button type="submit" class="btn btn--primary">保存 Banner</button>
+                <button type="button" id="btn-cancel-banner-edit" class="btn btn--outline">取消</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- 新闻列表 -->
+          <section id="panel-list" class="panel hidden">
+            <div class="panel__head">
+              <h2>新闻动态</h2>
+              <button type="button" id="btn-new" class="btn btn--primary">+ 新建文章</button>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>标题</th>
+                    <th>日期</th>
+                    <th>分类</th>
+                    <th>展示</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="news-table-body"></tbody>
+              </table>
+            </div>
+            <div id="news-pagination" class="list-pagination" hidden></div>
+          </section>
+
+          <!-- 在线留言 -->
+          <section id="panel-messages" class="panel hidden">
+            <div class="panel__head">
+              <h2>在线留言</h2>
+              <button type="button" id="btn-export-messages" class="btn btn--outline">导出当前筛选</button>
+            </div>
+            <div class="filter-bar">
+              <label class="field field--inline">
+                <span>开始日期</span>
+                <input type="date" id="filter-msg-from" />
+              </label>
+              <label class="field field--inline">
+                <span>结束日期</span>
+                <input type="date" id="filter-msg-to" />
+              </label>
+              <label class="field field--inline">
+                <span>咨询类型</span>
+                <select id="filter-msg-type">
+                  <option value="all">全部类型</option>
+                  <option value="product">产品咨询</option>
+                  <option value="business">商务合作</option>
+                  <option value="dealer">经销商加盟</option>
+                  <option value="group">企业团购</option>
+                  <option value="restaurant">餐饮合作</option>
+                  <option value="media">媒体采访</option>
+                  <option value="other">其他</option>
+                </select>
+              </label>
+              <label class="field field--inline">
+                <span>处理状态</span>
+                <select id="filter-msg-status">
+                  <option value="all">全部状态</option>
+                  <option value="pending">待处理</option>
+                  <option value="read">已读</option>
+                  <option value="done">已处理</option>
+                </select>
+              </label>
+              <button type="button" id="btn-filter-msg-reset" class="btn btn--outline btn--sm">重置筛选</button>
+            </div>
+            <p id="messages-count" class="panel__hint"></p>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>提交时间</th>
+                    <th>姓名</th>
+                    <th>电话</th>
+                    <th>咨询类型</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="messages-table-body"></tbody>
+              </table>
+            </div>
+            <div id="messages-pagination" class="list-pagination" hidden></div>
+          </section>
+
+          <!-- 网站设置 -->
+          <section id="panel-settings" class="panel hidden">
+            <div class="panel__head">
+              <h2>网站设置</h2>
+              <button type="button" id="btn-save-settings" class="btn btn--primary">保存设置</button>
+            </div>
+            <p class="panel__hint">修改 SEO、统计代码、联系信息、导航、页面模块等；保存后点击顶部「发布到官网」同步前台。</p>
+            <div class="settings-tabs">
+              <button type="button" class="settings-tabs__btn active" data-settings-tab="stats">访问统计</button>
+              <button type="button" class="settings-tabs__btn" data-settings-tab="site">基本信息</button>
+              <button type="button" class="settings-tabs__btn" data-settings-tab="seo">SEO</button>
+              <button type="button" class="settings-tabs__btn" data-settings-tab="analytics">统计代码</button>
+              <button type="button" class="settings-tabs__btn" data-settings-tab="contact">联系信息</button>
+              <button type="button" class="settings-tabs__btn" data-settings-tab="social">社交媒体</button>
+              <button type="button" class="settings-tabs__btn" data-settings-tab="footer">页脚文案</button>
+              <button type="button" class="settings-tabs__btn" data-settings-tab="nav">导航管理</button>
+              <button type="button" class="settings-tabs__btn" data-settings-tab="page-content">页面内容</button>
+            </div>
+
+            <div id="settings-tab-stats" class="settings-tab">
+              <div class="stats-cards" id="stats-cards"></div>
+              <div class="table-wrap mt-md">
+                <table class="data-table">
+                  <thead><tr><th>页面</th><th>访问量</th></tr></thead>
+                  <tbody id="stats-pages-body"></tbody>
+                </table>
+              </div>
+              <div id="stats-pagination" class="list-pagination" hidden></div>
+            </div>
+
+            <form id="settings-form" class="article-form">
+              <div id="settings-tab-site" class="settings-tab hidden">
+                <label class="field">
+                  <span><input type="checkbox" id="site-enabled" checked> 网站启用（取消勾选即进入维护模式，前台不可访问）</span>
+                </label>
+                <div class="form-grid">
+                  <label class="field"><span>网站名称</span><input type="text" id="site-name" placeholder="道丹元"></label>
+                  <label class="field"><span>无 Logo 时显示的字标</span><input type="text" id="site-logo-icon-text" maxlength="2" placeholder="道"></label>
+                  <label class="field field--full">
+                    <span>顶部 Logo 图片 URL</span>
+                    <div class="input-row">
+                      <input type="text" id="site-logo" placeholder="留空则使用字标">
+                      <label class="btn btn--outline upload-btn">上传<input type="file" id="site-logo-upload" accept="image/*" hidden></label>
+                    </div>
+                  </label>
+                  <label class="field field--full">
+                    <span>Favicon 图标 URL</span>
+                    <div class="input-row">
+                      <input type="text" id="site-favicon" placeholder="/images/brand/favicon.ico">
+                      <label class="btn btn--outline upload-btn">上传<input type="file" id="site-favicon-upload" accept="image/*" hidden></label>
+                    </div>
+                  </label>
+                  <label class="field field--full"><span>维护页标题</span><input type="text" id="site-maintenance-title"></label>
+                  <label class="field field--full"><span>维护页说明</span><textarea id="site-maintenance-message" rows="3"></textarea></label>
+                </div>
+              </div>
+
+              <div id="settings-tab-seo" class="settings-tab hidden">
+                <h3 class="settings-section-title">全局默认</h3>
+                <div class="form-grid">
+                  <label class="field field--full"><span>默认标题</span><input type="text" id="seo-default-title"></label>
+                  <label class="field field--full"><span>默认描述</span><textarea id="seo-default-desc" rows="2"></textarea></label>
+                  <label class="field field--full"><span>默认关键词</span><input type="text" id="seo-default-keywords"></label>
+                </div>
+                <h3 class="settings-section-title">分页面 SEO</h3>
+                <div id="seo-pages-container"></div>
+                <div id="seo-pagination" class="list-pagination" hidden></div>
+              </div>
+
+              <div id="settings-tab-analytics" class="settings-tab hidden">
+                <label class="field">
+                  <span><input type="checkbox" id="analytics-track"> 启用站内访问统计（PV）</span>
+                </label>
+                <label class="field field--full"><span>百度统计 SiteId</span><input type="text" id="analytics-baidu" placeholder="hm.js 中的站点 ID"></label>
+                <label class="field field--full"><span>Google Analytics ID</span><input type="text" id="analytics-ga" placeholder="G-XXXXXXXX"></label>
+                <label class="field field--full"><span>自定义 Head 脚本</span><textarea id="analytics-custom" rows="4" placeholder="可粘贴第三方统计 script 标签"></textarea></label>
+              </div>
+
+              <div id="settings-tab-contact" class="settings-tab hidden">
+                <p class="panel__hint">以下字段留空则前台对应项（含标题）整行不显示。</p>
+                <div class="form-grid">
+                  <label class="field"><span>全国服务专线</span><input type="text" id="contact-hotline"></label>
+                  <label class="field"><span>商务合作专线</span><input type="text" id="contact-business-hotline"></label>
+                  <label class="field"><span>客户服务电话</span><input type="text" id="contact-service-phone"></label>
+                  <label class="field"><span>商务邮箱</span><input type="email" id="contact-business-email"></label>
+                  <label class="field"><span>客服邮箱</span><input type="email" id="contact-service-email"></label>
+                  <label class="field field--full"><span>公司地址</span><input type="text" id="contact-address"></label>
+                  <label class="field"><span>工作时间</span><input type="text" id="contact-work-hours"></label>
+                  <label class="field field--full"><span>地图区块说明</span><input type="text" id="contact-map-caption"></label>
+                </div>
+              </div>
+
+              <div id="settings-tab-social" class="settings-tab hidden">
+                <p class="panel__hint">平台名称、账号、二维码均为空时，前台不展示该平台。</p>
+                <div id="social-settings-container"></div>
+                <div id="social-pagination" class="list-pagination" hidden></div>
+              </div>
+
+              <div id="settings-tab-footer" class="settings-tab hidden">
+                <p class="panel__hint">留空的页脚字段在前台不显示。</p>
+                <div class="form-grid">
+                  <label class="field"><span>品牌名</span><input type="text" id="footer-brand-name"></label>
+                  <label class="field"><span>产品说明</span><input type="text" id="footer-brand-product"></label>
+                  <label class="field field--full"><span>品牌简介</span><textarea id="footer-brand-desc" rows="3"></textarea></label>
+                  <label class="field field--full"><span>版权信息</span><input type="text" id="footer-copyright"></label>
+                  <label class="field field--full"><span>ICP 备案号（留空不显示）</span><input type="text" id="footer-icp" placeholder="京ICP备xxxxxxxx号"></label>
+                  <label class="field field--full"><span>底部声明</span><input type="text" id="footer-disclaimer"></label>
+                </div>
+              </div>
+
+              <div id="settings-tab-nav" class="settings-tab hidden">
+                <p class="panel__hint">可调整一级导航的启用、排序与名称；九解丹下拉子项可单独启停。保存后请发布网站设置。</p>
+                <div id="nav-settings-container"></div>
+                <div id="nav-pagination" class="list-pagination" hidden></div>
+              </div>
+
+              <div id="settings-tab-page-content" class="settings-tab hidden">
+                <p class="panel__hint">编辑 5 个核心页面的关键模块文案与显隐；不支持任意增删楼层。保存后请发布网站设置。</p>
+                <div id="page-content-container"></div>
+                <div id="page-content-pagination" class="list-pagination" hidden></div>
+              </div>
+
+              <p id="settings-error" class="form-error"></p>
+            </form>
+          </section>
+
+          <!-- 账号管理 -->
+          <section id="panel-accounts" class="panel hidden">
+            <div class="panel__head">
+              <h2>账号管理</h2>
+              <button type="button" id="btn-refresh-accounts" class="btn btn--outline">刷新</button>
+            </div>
+            <p class="panel__hint">超级管理员可创建、禁用或删除普通管理员账号。`admin` 为超级管理员。</p>
+
+            <div class="subpanel">
+              <h3 class="subpanel__title">新建账号</h3>
+              <form id="account-form" class="form-grid form-grid--inline">
+                <label class="field">
+                  <span>用户名</span>
+                  <input type="text" id="account-username" required minlength="2" autocomplete="off">
+                </label>
+                <label class="field">
+                  <span>初始密码</span>
+                  <input type="password" id="account-password" required minlength="6" autocomplete="new-password">
+                </label>
+                <label class="field">
+                  <span>角色</span>
+                  <select id="account-role">
+                    <option value="admin">管理员</option>
+                    <option value="super">超级管理员</option>
+                  </select>
+                </label>
+                <div class="field field--actions">
+                  <span>&nbsp;</span>
+                  <button type="submit" class="btn btn--primary">添加账号</button>
+                </div>
+              </form>
+              <p id="account-form-error" class="form-error"></p>
+            </div>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>用户名</th>
+                    <th>角色</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="accounts-table-body"></tbody>
+              </table>
+            </div>
+            <div id="accounts-pagination" class="list-pagination" hidden></div>
+
+            <div class="subpanel">
+              <h3 class="subpanel__title">修改我的密码</h3>
+              <form id="password-form" class="form-grid form-grid--inline">
+                <label class="field">
+                  <span>原密码</span>
+                  <input type="password" id="password-old" required autocomplete="current-password">
+                </label>
+                <label class="field">
+                  <span>新密码</span>
+                  <input type="password" id="password-new" required minlength="6" autocomplete="new-password">
+                </label>
+                <div class="field field--actions">
+                  <span>&nbsp;</span>
+                  <button type="submit" class="btn btn--primary">保存密码</button>
+                </div>
+              </form>
+              <p id="password-form-error" class="form-error"></p>
+            </div>
+          </section>
+
+          <!-- 操作日志 -->
+          <section id="panel-logs" class="panel hidden">
+            <div class="panel__head">
+              <h2>操作日志</h2>
+              <button type="button" id="btn-refresh-logs" class="btn btn--outline">刷新</button>
+            </div>
+            <p class="panel__hint">记录登录、内容编辑、发布、账号变更等操作，最多保留 1000 条。</p>
+            <div class="filter-bar">
+              <label class="field field--inline">
+                <span>操作类型</span>
+                <input type="text" id="log-filter-action" placeholder="如 login、news、publish">
+              </label>
+              <label class="field field--inline">
+                <span>操作人</span>
+                <input type="text" id="log-filter-user" placeholder="用户名">
+              </label>
+              <button type="button" id="btn-filter-logs" class="btn btn--outline">筛选</button>
+              <button type="button" id="btn-filter-logs-reset" class="btn btn--outline">重置</button>
+            </div>
+            <p id="logs-summary" class="panel__hint"></p>
+            <div class="table-wrap">
+              <table class="data-table data-table--logs">
+                <thead>
+                  <tr>
+                    <th>时间</th>
+                    <th>操作人</th>
+                    <th>操作</th>
+                    <th>详情</th>
+                    <th>IP</th>
+                  </tr>
+                </thead>
+                <tbody id="logs-table-body"></tbody>
+              </table>
+            </div>
+            <div id="logs-pagination" class="list-pagination" hidden></div>
+          </section>
+
+          <!-- 编辑文章 -->
+          <section id="panel-edit" class="panel hidden">
+            <div class="panel__head">
+              <h2 id="edit-title-label">编辑文章</h2>
+            </div>
+            <form id="article-form" class="article-form">
+              <input type="hidden" name="originalId" id="original-id">
+              <div class="form-grid">
+                <label class="field">
+                  <span>文章 ID（英文短横线，创建后不可改）</span>
+                  <input type="text" name="id" id="field-id" pattern="[a-z0-9-]+" required>
+                </label>
+                <label class="field">
+                  <span>发布日期</span>
+                  <input type="date" name="date" id="field-date" required>
+                </label>
+                <label class="field">
+                  <span>分类（仅用于后台筛选）</span>
+                  <select name="category" id="field-category">
+                    <option value="company">企业新闻</option>
+                    <option value="event">品牌活动</option>
+                    <option value="industry">行业资讯</option>
+                    <option value="media">媒体报道</option>
+                  </select>
+                </label>
+                <label class="field field--full">
+                  <span>标题</span>
+                  <input type="text" name="title" id="field-title" required>
+                </label>
+                <label class="field field--full">
+                  <span>摘要</span>
+                  <textarea name="excerpt" id="field-excerpt" rows="2" required></textarea>
+                </label>
+                <label class="field field--full">
+                  <span>封面图 URL</span>
+                  <div class="input-row">
+                    <input type="text" name="cover" id="field-cover" placeholder="/images/brand/news-1.jpg">
+                    <label class="btn btn--outline upload-btn">
+                      上传图片
+                      <input type="file" id="cover-upload" accept="image/*" hidden>
+                    </label>
+                  </div>
+                </label>
+                <label class="field">
+                  <span>展示方式</span>
+                  <select name="contentType" id="field-content-type">
+                    <option value="detail">站内详情页</option>
+                    <option value="link">外链跳转（无需正文）</option>
+                  </select>
+                </label>
+                <label class="field field--full hidden" id="field-link-wrap">
+                  <span>跳转链接</span>
+                  <input type="text" name="link" id="field-link" placeholder="https://example.com 或 products.html">
+                </label>
+                <label class="field hidden" id="field-link-target-wrap">
+                  <span>打开方式</span>
+                  <select name="linkTarget" id="field-link-target">
+                    <option value="_blank">新标签页</option>
+                    <option value="_self">当前页</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="blocks-section" id="blocks-section">
+                <div class="blocks-section__head">
+                  <h3>正文内容块</h3>
+                  <div class="blocks-section__actions">
+                    <button type="button" class="btn btn--sm" data-add-block="text">+ 文字</button>
+                    <button type="button" class="btn btn--sm" data-add-block="image">+ 图片</button>
+                    <button type="button" class="btn btn--sm" data-add-block="video">+ 视频</button>
+                  </div>
+                </div>
+                <div id="blocks-container"></div>
+              </div>
+
+              <p id="form-error" class="form-error"></p>
+              <div class="form-actions">
+                <button type="submit" class="btn btn--primary">保存文章</button>
+                <button type="button" id="btn-cancel-edit" class="btn btn--outline">取消</button>
+              </div>
+            </form>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div id="message-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="message-modal-title">
+      <div class="modal__backdrop" data-close-modal></div>
+      <div class="modal__card">
+        <div class="modal__head">
+          <h3 id="message-modal-title">留言详情</h3>
+          <button type="button" class="btn btn--sm btn--outline" data-close-modal>关闭</button>
+        </div>
+        <div id="message-modal-body" class="modal__body"></div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/admin/admin.js"></script>
+</body>
+</html>

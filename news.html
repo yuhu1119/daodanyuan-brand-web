@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="道丹元新闻动态 - 企业新闻、品牌活动、行业资讯、媒体报道">
+  <title>新闻动态 - 道丹元</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <!-- @partial site-top.html -->
+
+  <section class="page-banner" id="main-content">
+    <div class="container">
+      <h1 class="page-banner__title">新闻动态</h1>
+      <p class="page-banner__desc">企业新闻 · 品牌活动 · 行业资讯 · 媒体报道</p>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <div class="news-tabs fade-in">
+        <button class="news-tab active" data-category="all">全部</button>
+        <button class="news-tab" data-category="company">企业新闻</button>
+        <button class="news-tab" data-category="event">品牌活动</button>
+        <button class="news-tab" data-category="industry">行业资讯</button>
+        <button class="news-tab" data-category="media">媒体报道</button>
+      </div>
+
+      <div class="news-grid" id="news-grid"></div>
+      <div id="news-pagination" class="news-pagination-wrap hidden"></div>
+    </div>
+  </section>
+
+  <!-- @partial footer.html -->
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
