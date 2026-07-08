@@ -57,6 +57,7 @@ app.use(
         frameAncestors: ["'none'"],
         baseUri: ["'self'"],
         formAction: ["'self'"],
+        upgradeInsecureRequests: null,
       },
     },
   })
